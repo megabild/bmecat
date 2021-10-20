@@ -1,4 +1,4 @@
-module github.com/olivere/bmecat
+module github.com/megabild/bmecat
 
 go 1.15
 

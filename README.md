@@ -1,7 +1,5 @@
 # BMEcat reader and writer for Go
 
-[![Actions Status](https://github.com/olivere/bmecat/workflows/Test/badge.svg)](https://github.com/olivere/bmecat/actions)
-
 This is a simple library to read and write BMEcat files in the Go programming language.
 
 # BMEcat
@@ -13,4 +11,6 @@ http://www.bme.de/initiativen/bmecat/download/.
 
 # License
 
-MIT. See [LICENSE](https://github.com/olivere/bmecat/blob/master/LICENSE) file.
+MIT. See [LICENSE](https://github.com/megabild/bmecat/blob/master/LICENSE) file. 
+
+Original author: [olivere](https://github.com/olivere) (Thank you!)
