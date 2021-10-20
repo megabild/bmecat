@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/olivere/bmecat/bmecat12"
+	"github.com/megabild/bmecat/bmecat12"
 )
 
 var (

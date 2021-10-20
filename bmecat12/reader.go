@@ -10,7 +10,7 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/time/rate"
 
-	"github.com/olivere/bmecat/internal"
+	"github.com/megabild/bmecat/internal"
 )
 
 // HeaderHandler specifies the interface for a handler that wants to

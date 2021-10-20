@@ -10,7 +10,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/olivere/bmecat/bmecat12"
+	"github.com/megabild/bmecat/bmecat12"
 )
 
 // perfCommand roughly evaluates the Read performance of the bmecat package.

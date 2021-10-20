@@ -9,7 +9,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/olivere/bmecat/bmecat12"
+	"github.com/megabild/bmecat/bmecat12"
 )
 
 // infoCommand parses the BMEcat header and prints the information found there.

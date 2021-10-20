@@ -1,6 +1,6 @@
 module github.com/megabild/bmecat
 
-go 1.15
+go 1.17
 
 require (
 	github.com/pkg/errors v0.9.1
