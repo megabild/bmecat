@@ -16,6 +16,7 @@ type testHandler struct {
 	firstPassOnly bool
 	header        *bmecat12.Header
 	articles      []*bmecat12.Article
+	catalogGroups []*bmecat12.CatalogGroup
 }
 
 func (h *testHandler) HandleHeader(header *bmecat12.Header) error {
@@ -30,9 +31,13 @@ func (h *testHandler) HandleArticle(article *bmecat12.Article) error {
 	h.articles = append(h.articles, article)
 	return nil
 }
+func (h *testHandler) HandleCatalogGroup(group *bmecat12.CatalogGroup) error {
+	h.catalogGroups = append(h.catalogGroups, group)
+	return nil
+}
 
 func TestReadCatalog(t *testing.T) {
-	f, err := os.Open(filepath.Join("testdata", "new_catalog.golden.xml"))
+	f, err := os.Open(filepath.Join("C:\\", "temp", "bmecat_klein.xml"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -47,7 +52,10 @@ func TestReadCatalog(t *testing.T) {
 	if h.header == nil {
 		t.Fatal("want Header, have nil")
 	}
-	if want, have := 1, len(h.articles); want != have {
+	if want, have := 338, len(h.catalogGroups); want != have {
+		t.Fatalf("want len(catalogGroups) = %d, have %d", want, have)
+	}
+	if want, have := 255, len(h.articles); want != have {
 		t.Fatalf("want len(articles) = %d, have %d", want, have)
 	}
 }
