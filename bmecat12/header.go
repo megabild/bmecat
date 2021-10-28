@@ -20,6 +20,7 @@ type Header struct {
 	UDX           *UserDefinedExtensions `xml:"USER_DEFINED_EXTENSIONS,omitempty"`
 
 	NumberOfArticles                  int `xml:"-"`
+	NumberOfFeatureGroups             int `xml:"-"`
 	NumberOfCatalogGroups             int `xml:"-"`
 	NumberOfClassificationGroups      int `xml:"-"`
 	NumberOfArticleToCatalogGroupMaps int `xml:"-"`

@@ -37,6 +37,12 @@ type ClassificationGroupHandler interface {
 	HandleClassificationGroup(*ClassificationGroup) error
 }
 
+// FeatureGroupHandler, if implemented by a handler, is called whenever
+// the Reader passed a FEATURE_GROUP element.
+type FeatureGroupHandler interface {
+	HandleFeatureGroup(*FeatureGroup) error
+}
+
 // ArticleHandler, if implemented by a handler, is called whenever
 // the Reader passed an ARTICLE element with a product.
 type ArticleHandler interface {
@@ -117,11 +123,15 @@ func (r *Reader) Do(ctx context.Context, handler interface{}) error {
 		Header       HeaderHandler
 		CatalogGroup CatalogGroupHandler
 		ClassifGroup ClassificationGroupHandler
+		FeatureGroup FeatureGroupHandler
 		Article      ArticleHandler
 		Complete     CompletionHandler
 	}
 	if f, ok := handler.(HeaderHandler); ok {
 		h.Header = f
+	}
+	if f, ok := handler.(FeatureGroupHandler); ok {
+		h.FeatureGroup = f
 	}
 	if f, ok := handler.(CatalogGroupHandler); ok {
 		h.CatalogGroup = f
@@ -137,6 +147,7 @@ func (r *Reader) Do(ctx context.Context, handler interface{}) error {
 	}
 
 	var numArticles int
+	var numFeatureGroups int
 	var numCatalogGroups int
 	var numClassifGroups int
 	var rl *rate.Limiter
@@ -168,6 +179,8 @@ func (r *Reader) Do(ctx context.Context, handler interface{}) error {
 				numCatalogGroups++
 			case "CLASSIFICATION_GROUP":
 				numClassifGroups++
+			case "FEATURE_GROUP":
+				numFeatureGroups++
 			case "ARTICLE_TO_CATALOGGROUP_MAP":
 				var m ArticleToCatalogGroupMap
 				if err := dec.DecodeElement(&m, &se); err != nil {
@@ -224,6 +237,7 @@ func (r *Reader) Do(ctx context.Context, handler interface{}) error {
 					return errors.Wrapf(err, "bmecat/reader: unable to decode HEADER around byte offset %d", dec.InputOffset())
 				}
 				h.NumberOfArticles = numArticles
+				h.NumberOfFeatureGroups = numFeatureGroups
 				h.NumberOfCatalogGroups = numCatalogGroups
 				h.NumberOfClassificationGroups = numClassifGroups
 				r.artToCatalogGroupMu.Lock()
@@ -253,6 +267,16 @@ func (r *Reader) Do(ctx context.Context, handler interface{}) error {
 				if h.ClassifGroup != nil {
 					if err := h.ClassifGroup.HandleClassificationGroup(&cg); err != nil {
 						return errors.Wrapf(err, "bmecat/reader: handler for CLASSIFICATION_GROUP %q returned an error around byte offset %d", cg.ID, dec.InputOffset())
+					}
+				}
+			case "FEATURE_GROUP":
+				var fg FeatureGroup
+				if err := dec.DecodeElement(&fg, &se); err != nil {
+					return errors.Wrapf(err, "bmecat/reader: unable to decode FEATURE_GROUP around byte offset %d", dec.InputOffset())
+				}
+				if h.FeatureGroup != nil {
+					if err := h.FeatureGroup.HandleFeatureGroup(&fg); err != nil {
+						return errors.Wrapf(err, "bmecat/reader: handler for FEATURE_GROUP %q returned an error around byte offset %d", fg.ID, dec.InputOffset())
 					}
 				}
 			case "ARTICLE":

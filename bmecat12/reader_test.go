@@ -17,6 +17,7 @@ type testHandler struct {
 	header        *bmecat12.Header
 	articles      []*bmecat12.Article
 	catalogGroups []*bmecat12.CatalogGroup
+	featureGroups []*bmecat12.FeatureGroup
 }
 
 func (h *testHandler) HandleHeader(header *bmecat12.Header) error {
@@ -35,6 +36,10 @@ func (h *testHandler) HandleCatalogGroup(group *bmecat12.CatalogGroup) error {
 	h.catalogGroups = append(h.catalogGroups, group)
 	return nil
 }
+func (h *testHandler) HandleFeatureGroup(feature *bmecat12.FeatureGroup) error {
+	h.featureGroups = append(h.featureGroups, feature)
+	return nil
+}
 
 func TestReadCatalog(t *testing.T) {
 	f, err := os.Open(filepath.Join("C:\\", "temp", "bmecat_klein.xml"))
@@ -51,6 +56,9 @@ func TestReadCatalog(t *testing.T) {
 	}
 	if h.header == nil {
 		t.Fatal("want Header, have nil")
+	}
+	if want, have := 1, len(h.featureGroups); want != have {
+		t.Fatalf("want len(featureGroups) = %d, have %d", want, have)
 	}
 	if want, have := 338, len(h.catalogGroups); want != have {
 		t.Fatalf("want len(catalogGroups) = %d, have %d", want, have)
